@@ -1264,6 +1264,30 @@ class CompetitionPhase(models.Model):
                             except KeyError:
                                 pass
 
+                        elif operation.name == 'MRR':
+                            try:
+                                cnt = len(computed_deps[sdef.id])
+                                if cnt > 0:
+                                    computed_values = {}
+                                    for id in submission_ids:
+                                        try:
+                                            # Initialize an empty list to store reciprocal ranks
+                                            reciprocal_ranks = []
+                                            # Iterate through dependencies to calculate reciprocal ranks
+                                            for d in computed_deps[sdef.id]:
+                                                rank = ranks[d.id][id]
+                                                # Add the reciprocal rank to the list, avoiding division by zero
+                                                reciprocal_ranks.append(1.0 / rank if rank > 0 else 0)
+                                            # Calculate the mean of the reciprocal ranks
+                                            computed_values[id] = sum(reciprocal_ranks) / float(cnt)
+                                        except KeyError:
+                                            pass
+
+                                    values[sdef.id] = computed_values
+                                    ranks[sdef.id] = self.rank_values(submission_ids, computed_values, sort_ascending=sdef.sorting=='asc')
+                            except KeyError:
+                                pass
+
             # format values
             for result in results:
                 try:
