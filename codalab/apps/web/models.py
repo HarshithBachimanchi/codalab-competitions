@@ -2422,7 +2422,7 @@ class SubmissionScoreDefGroup(models.Model):
 class SubmissionComputedScore(models.Model):
     scoredef = models.OneToOneField(SubmissionScoreDef, related_name='computed_score', on_delete=models.CASCADE)
     operation = models.CharField(max_length=10, choices=(('Max', 'Max'),
-                                                        ('Avg', 'Average')))
+                                                        ('Avg', 'Average', 'MRR')))
     weights = models.CharField(max_length=200, null=True, blank=True)
 
 
